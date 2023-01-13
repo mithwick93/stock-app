@@ -1,5 +1,6 @@
 package com.mithwick93.stocks.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,8 @@ import java.util.Date;
 @AllArgsConstructor
 public class StockDto {
     private static final int STOCK_MIN_PRICE_VALUE = 0;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Null
     private Long id;
 
@@ -33,6 +36,7 @@ public class StockDto {
     @Min(value = STOCK_MIN_PRICE_VALUE, message = "Stock price requires a positive number")
     private BigDecimal currentPrice;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Null
     private Date lastUpdate;
 
