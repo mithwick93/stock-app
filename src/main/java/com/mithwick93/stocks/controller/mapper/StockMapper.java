@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Mapper class to map Stock model to Stock DTO and vise versa.
+ *
+ * @author mithwick93
  */
 @Component
 public class StockMapper {

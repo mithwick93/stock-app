@@ -69,7 +69,7 @@ public class StockService {
      * @return updated {@link Stock}.
      */
     public Stock updateStock(long id, Stock stock) {
-        //TODO: revisit
+        //TODO: revisit, create if not found
         Stock existingStock = findStockById(id);
 
         existingStock.setName(stock.getName());
