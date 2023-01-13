@@ -7,6 +7,7 @@ import com.mithwick93.stocks.exception.StockNotFoundException;
 import com.mithwick93.stocks.modal.Stock;
 import com.mithwick93.stocks.service.StockService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -123,7 +124,9 @@ public class StockController {
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<StockDto> getStockById(@PathVariable Long id) {
+    public ResponseEntity<StockDto> getStockById(
+            @Parameter(description = "id of stock to be searched") @PathVariable Long id
+    ) {
         Stock stock = stockService.findStockById(id);
         StockDto stockResponse = stockMapper.toDto(stock);
 
@@ -157,7 +160,9 @@ public class StockController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<StockDto> createStock(@Valid @RequestBody StockDto stockDto) {
+    public ResponseEntity<StockDto> createStock(
+            @Parameter(description = "new stock request") @Valid @RequestBody StockDto stockDto
+    ) {
         Stock newStockRequest = stockMapper.toModal(stockDto);
         System.out.println(newStockRequest);
         Stock stock = stockService.createStock(newStockRequest);
@@ -201,7 +206,10 @@ public class StockController {
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<StockDto> updateStock(@PathVariable Long id, @Valid @RequestBody StockDto stockDto) {
+    public ResponseEntity<StockDto> updateStock(
+            @Parameter(description = "id of stock to be updated") @PathVariable Long id,
+            @Parameter(description = "stock information to be updated") @Valid @RequestBody StockDto stockDto
+    ) {
         Stock updateStockRequest = stockMapper.toModal(stockDto);
         Stock updatedStock = stockService.updateStock(id, updateStockRequest);
         StockDto stockResponse = stockMapper.toDto(updatedStock);
@@ -235,7 +243,9 @@ public class StockController {
     })
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<?> deleteStock(@PathVariable Long id) {
+    public ResponseEntity<?> deleteStock(
+            @Parameter(description = "id of stock to be deleted") @PathVariable Long id
+    ) {
         stockService.deleteStock(id);
 
         return ResponseEntity.noContent().build();
