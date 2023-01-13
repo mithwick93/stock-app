@@ -6,11 +6,16 @@ import com.mithwick93.stocks.controller.mapper.StockMapper;
 import com.mithwick93.stocks.exception.StockNotFoundException;
 import com.mithwick93.stocks.modal.Stock;
 import com.mithwick93.stocks.service.StockService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +63,19 @@ public class StockController {
      * @param size size per page. Default is 10.
      * @return list of all {@link Stock}s.
      */
+    @Operation(summary = "Get all stocks")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the Stocks",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}// TODO: type of object
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error occurred",
+                    content = @Content
+            )
+    })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -84,6 +102,24 @@ public class StockController {
      * @return {@link Stock} by its id.
      * @throws StockNotFoundException when there is no stock with such id.
      */
+    @Operation(summary = "Get a stock by its id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the Stock",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Stock not found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error occurred",
+                    content = @Content
+            )
+    })
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -100,11 +136,30 @@ public class StockController {
      * @param stockDto {@link StockDto} of new stock to add.
      * @return newly created {@link Stock}.
      */
+    @Operation(summary = "Create stock")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Created new Stock",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad stock data",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error occurred",
+                    content = @Content
+            )
+    })
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<StockDto> createStock(@Validated @RequestBody StockDto stockDto) {
+    public ResponseEntity<StockDto> createStock(@Valid @RequestBody StockDto stockDto) {
         Stock newStockRequest = stockMapper.toModal(stockDto);
+        System.out.println(newStockRequest);
         Stock stock = stockService.createStock(newStockRequest);
         StockDto stockResponse = stockMapper.toDto(stock);
 
@@ -120,10 +175,33 @@ public class StockController {
      * @param stockDto {@link StockDto} of stock to update from.
      * @return updated {@link Stock}.
      */
+    @Operation(summary = "Update stock")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Updated Stock",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad stock data",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Stock not found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error occurred",
+                    content = @Content
+            )
+    })
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<StockDto> updateStock(@PathVariable Long id, @Validated @RequestBody StockDto stockDto) {
+    public ResponseEntity<StockDto> updateStock(@PathVariable Long id, @Valid @RequestBody StockDto stockDto) {
         Stock updateStockRequest = stockMapper.toModal(stockDto);
         Stock updatedStock = stockService.updateStock(id, updateStockRequest);
         StockDto stockResponse = stockMapper.toDto(updatedStock);
@@ -137,6 +215,24 @@ public class StockController {
      * @param id id of stock to delete.
      * @return Void
      */
+    @Operation(summary = "Delete stock")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Deleted Stock",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Stock not found",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error occurred",
+                    content = @Content
+            )
+    })
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteStock(@PathVariable Long id) {
