@@ -5,16 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * Stock entity which contains info about stock, its name and price.
@@ -39,10 +40,7 @@ public class Stock {
     @Column(nullable = false)
     private BigDecimal currentPrice;
 
-    private ZonedDateTime lastUpdate;
-
-    @PreUpdate
-    protected void onUpdate() {
-        lastUpdate = ZonedDateTime.now(ZoneOffset.UTC);
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
+    private Date lastUpdate;
 }

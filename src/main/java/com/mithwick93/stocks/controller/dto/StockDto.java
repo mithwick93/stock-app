@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * Stock DTO used to communicate with clients.
@@ -34,6 +34,6 @@ public class StockDto {
     private BigDecimal currentPrice;
 
     @Null
-    private ZonedDateTime lastUpdate;
+    private Date lastUpdate;
 
 }
