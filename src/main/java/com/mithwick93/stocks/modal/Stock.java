@@ -23,8 +23,8 @@ import java.time.ZonedDateTime;
  */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "stocks")
 public class Stock {

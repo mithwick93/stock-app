@@ -4,11 +4,10 @@ import com.mithwick93.stocks.dal.repository.StockRepository;
 import com.mithwick93.stocks.exception.StockNotFoundException;
 import com.mithwick93.stocks.modal.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Service to perform business logic on {@link Stock} entities.
@@ -29,10 +28,11 @@ public class StockService {
      *
      * @return list of all {@link Stock}s.
      */
-    public List<Stock> findAllStocks(int pageNo, int pageSize) {
-        //TODO: Revisit paging and return
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        return stockRepository.findAll(pageable).getContent();
+    public Page<Stock> findAllStocks(int page, int size) {
+        //TODO: Revisit paging and return, add sorting by name
+        Pageable pageable = PageRequest.of(page, size);
+
+        return stockRepository.findAll(pageable);
     }
 
     /**
@@ -42,7 +42,7 @@ public class StockService {
      * @return {@link Stock} by its id.
      * @throws StockNotFoundException when there is no stock with such id.
      */
-    private Stock findStockById(long id) {
+    public Stock findStockById(long id) {
         //TODO: revisit
         return stockRepository
                 .findById(id)
@@ -57,7 +57,7 @@ public class StockService {
      * @param stock {@link Stock} new stock to add.
      * @return created {@link Stock}.
      */
-    public Stock createStock(final Stock stock) {
+    public Stock createStock(Stock stock) {
         return stockRepository.save(stock);
     }
 
@@ -68,8 +68,9 @@ public class StockService {
      * @param stock new {@link Stock} information.
      * @return updated {@link Stock}.
      */
-    public Stock updateStock(long id, final Stock stock) { //TODO: revisit
-        final Stock existingStock = findStockById(id);
+    public Stock updateStock(long id, Stock stock) {
+        //TODO: revisit
+        Stock existingStock = findStockById(id);
 
         existingStock.setName(stock.getName());
         existingStock.setCurrentPrice(stock.getCurrentPrice());
@@ -83,7 +84,9 @@ public class StockService {
      * @param id id of stock to delete.
      */
     public void deleteStock(long id) {
-        stockRepository.deleteById(id);
+        Stock existingStock = findStockById(id);
+
+        stockRepository.deleteById(existingStock.getId());
     }
 
 }
