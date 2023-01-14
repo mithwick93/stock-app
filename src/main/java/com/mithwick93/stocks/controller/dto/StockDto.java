@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,7 @@ public class StockDto {
     private Long id;
 
     @NotEmpty(message = "Stock name is required")
+    @Size(max = 255, message = "Stock name max length should be <= 255")
     private String name;
 
     @NotNull(message = "Stock price is required")
