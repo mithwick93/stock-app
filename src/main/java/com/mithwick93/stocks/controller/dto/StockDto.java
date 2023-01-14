@@ -1,10 +1,11 @@
 package com.mithwick93.stocks.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,7 @@ import java.util.Date;
 public class StockDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Null
+    @Null(message = "Stock id not allowed in request")
     private Long id;
 
     @NotEmpty(message = "Stock name is required")
@@ -34,11 +35,12 @@ public class StockDto {
     private String name;
 
     @NotNull(message = "Stock price is required")
-    @Positive(message = "Stock price requires a positive number")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Stock price requires a positive number")
+    @Digits(integer = 19, fraction = 4, message = "Stock price is beyond accepted range of decimal(19, 4)")
     private BigDecimal currentPrice;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Null
+    @Null(message = "Stock last update not allowed in request")
     private Date lastUpdate;
 
 }

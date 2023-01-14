@@ -1,7 +1,6 @@
 package com.mithwick93.stocks.exception;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,11 +27,29 @@ import java.util.List;
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     /**
-     * Handle {@link MethodArgumentNotValidException }.
+     * Handle {@link StockNotFoundException}.
      *
      * @param ex      exception to handle.
      * @param request web request.
-     * @return RFC-7807 {@link Problem} wrapped in {@link ResponseEntity} with HTTP status 400.
+     * @return RFC-7807 {@link ProblemDetail} wrapped in {@link ResponseEntity} with HTTP status 404.
+     */
+    @ExceptionHandler(value = StockNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, code = HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseEntity<ProblemDetail> handleStockNotFoundException(StockNotFoundException ex, WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setTitle("Not found");
+        problemDetail.setInstance(URI.create(((ServletWebRequest) request).getRequest().getRequestURI()));
+
+        return new ResponseEntity<>(problemDetail, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handle invalid requests thrown with {@link MethodArgumentNotValidException }.
+     *
+     * @param ex      exception to handle.
+     * @param request web request.
+     * @return RFC-7807 {@link ProblemDetail} wrapped in {@link ResponseEntity} with HTTP status 400.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -52,23 +69,5 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         problemDetail.setInstance(URI.create(((ServletWebRequest) request).getRequest().getRequestURI()));
 
         return new ResponseEntity<>(problemDetail, headers, status);
-    }
-
-    /**
-     * Handle {@link StockNotFoundException}.
-     *
-     * @param ex      exception to handle.
-     * @param request web request.
-     * @return RFC-7807 {@link Problem} wrapped in {@link ResponseEntity} with HTTP status 404.
-     */
-    @ExceptionHandler(value = StockNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, code = HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ResponseEntity<ProblemDetail> handleStockNotFoundException(StockNotFoundException ex, WebRequest request) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setTitle("Not found");
-        problemDetail.setInstance(URI.create(((ServletWebRequest) request).getRequest().getRequestURI()));
-
-        return new ResponseEntity<>(problemDetail, HttpStatus.NOT_FOUND);
     }
 }
