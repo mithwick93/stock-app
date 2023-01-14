@@ -42,7 +42,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  *
  * @author mithwick93
  */
-@Tag(name = "stock", description = "the Stock API")
+@Tag(name = "Stocks", description = "CRUD operations")
 @RestController
 @RequestMapping(value = "/api/v1/stocks")
 public class StockController {
@@ -83,8 +83,8 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<List<StockDto>> getStocks(
-            @RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER, required = false) int page,
-            @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) int size
+            @Parameter(description = "0-index page number. Default is 0") @RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER, required = false) int page,
+            @Parameter(description = "size of a page. Default is 10") @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) int size
     ) {
         //TODO: Add page info to the response
         Page<Stock> stocksPages = stockService.findAllStocks(page, size);
@@ -166,7 +166,6 @@ public class StockController {
             @Parameter(description = "new stock request") @Valid @RequestBody StockDto stockDto
     ) {
         Stock newStockRequest = stockMapper.toModal(stockDto);
-        System.out.println(newStockRequest);
         Stock stock = stockService.createStock(newStockRequest);
         StockDto stockResponse = stockMapper.toDto(stock);
 
