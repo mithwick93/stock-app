@@ -159,7 +159,7 @@ public class StockController {
                     content = @Content
             )
     })
-    @PostMapping(produces = APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<StockDto> createStock(
@@ -204,7 +204,7 @@ public class StockController {
                     content = @Content
             )
     })
-    @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<StockDto> updateStock(
