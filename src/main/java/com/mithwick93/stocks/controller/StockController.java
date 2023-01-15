@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,9 +81,14 @@ public class StockController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PagedModel.class))}// TODO: type of object
             ),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad stock data",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error occurred",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             )
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
@@ -115,12 +121,12 @@ public class StockController {
             @ApiResponse(
                     responseCode = "404",
                     description = "Stock not found",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error occurred",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             )
     })
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -151,12 +157,12 @@ public class StockController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Bad stock data",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error occurred",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             )
     })
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -191,17 +197,17 @@ public class StockController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Bad stock data",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Stock not found",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error occurred",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             )
     })
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -233,12 +239,12 @@ public class StockController {
             @ApiResponse(
                     responseCode = "404",
                     description = "Stock not found",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error occurred",
-                    content = @Content
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             )
     })
     @DeleteMapping(value = "/{id}")
