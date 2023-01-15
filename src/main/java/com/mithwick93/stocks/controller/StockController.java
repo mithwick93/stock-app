@@ -1,7 +1,8 @@
 package com.mithwick93.stocks.controller;
 
 import com.mithwick93.stocks.Constants;
-import com.mithwick93.stocks.controller.dto.StockDto;
+import com.mithwick93.stocks.controller.dto.StockRequestDto;
+import com.mithwick93.stocks.controller.dto.StockResponseDto;
 import com.mithwick93.stocks.controller.mapper.StockMapper;
 import com.mithwick93.stocks.exception.StockNotFoundException;
 import com.mithwick93.stocks.modal.Stock;
@@ -16,6 +17,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -48,6 +48,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class StockController {
     private StockService stockService;
     private StockMapper stockMapper;
+    private PagedResourcesAssembler<Stock> stockPagedResourcesAssembler;
 
     @Autowired
     public void setStockService(StockService stockService) {
@@ -57,6 +58,11 @@ public class StockController {
     @Autowired
     public void setStockMapper(StockMapper stockMapper) {
         this.stockMapper = stockMapper;
+    }
+
+    @Autowired
+    public void setStockPagedResourcesAssembler(PagedResourcesAssembler<Stock> stockPagedResourcesAssembler) {
+        this.stockPagedResourcesAssembler = stockPagedResourcesAssembler;
     }
 
     /**
@@ -71,7 +77,7 @@ public class StockController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Found the Stocks",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}// TODO: type of object
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PagedModel.class))}// TODO: type of object
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -82,20 +88,14 @@ public class StockController {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<List<StockDto>> getStocks(
+    public ResponseEntity<PagedModel<StockResponseDto>> getStocks(
             @Parameter(description = "0-index page number. Default is 0") @RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER, required = false) int page,
             @Parameter(description = "size of a page. Default is 10") @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) int size
     ) {
-        //TODO: Add page info to the response
         Page<Stock> stocksPages = stockService.findAllStocks(page, size);
+        PagedModel<StockResponseDto> stockResponseDtos = stockPagedResourcesAssembler.toModel(stocksPages, stockMapper);
 
-        List<Stock> stocks = stocksPages.getContent();
-        List<StockDto> stocksResponse = stocks
-                .stream()
-                .map(stockMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(stocksResponse);
+        return ResponseEntity.ok(stockResponseDtos);
     }
 
     /**
@@ -110,7 +110,7 @@ public class StockController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Found the Stock",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StockResponseDto.class))}
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -126,19 +126,19 @@ public class StockController {
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<StockDto> getStockById(
+    public ResponseEntity<StockResponseDto> getStockById(
             @Parameter(description = "id of stock to be searched") @PathVariable Long id
     ) {
         Stock stock = stockService.findStockById(id);
-        StockDto stockResponse = stockMapper.toDto(stock);
+        StockResponseDto stockResponseDto = stockMapper.toModel(stock);
 
-        return ResponseEntity.ok(stockResponse);
+        return ResponseEntity.ok(stockResponseDto);
     }
 
     /**
      * Create new stock by request.
      *
-     * @param stockDto {@link StockDto} of new stock to add.
+     * @param stockRequestDto {@link StockRequestDto} of new stock to add.
      * @return newly created {@link Stock}.
      */
     @Operation(summary = "Create stock")
@@ -146,7 +146,7 @@ public class StockController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Created new Stock",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StockResponseDto.class))}
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -162,23 +162,23 @@ public class StockController {
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResponseEntity<StockDto> createStock(
-            @Parameter(description = "new stock request") @Valid @RequestBody StockDto stockDto
+    public ResponseEntity<StockResponseDto> createStock(
+            @Parameter(description = "new stock request") @Valid @RequestBody StockRequestDto stockRequestDto
     ) {
-        Stock newStockRequest = stockMapper.toModal(stockDto);
-        Stock stock = stockService.createStock(newStockRequest);
-        StockDto stockResponse = stockMapper.toDto(stock);
+        Stock newStockRequest = stockMapper.toEntity(stockRequestDto);
+        Stock createdStock = stockService.createStock(newStockRequest);
+        StockResponseDto stockResponseDto = stockMapper.toModel(createdStock);
 
         return ResponseEntity
-                .created(linkTo(methodOn(StockController.class).getStockById(stockResponse.getId())).toUri())
-                .body(stockResponse);
+                .created(linkTo(methodOn(StockController.class).getStockById(stockResponseDto.getId())).toUri())
+                .body(stockResponseDto);
     }
 
     /**
      * Updates given stock.
      *
-     * @param id       id of stock to update.
-     * @param stockDto {@link StockDto} of stock to update from.
+     * @param id              id of stock to update.
+     * @param stockRequestDto {@link StockRequestDto} of stock to update from.
      * @return updated {@link Stock}.
      */
     @Operation(summary = "Update stock")
@@ -186,7 +186,7 @@ public class StockController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Updated Stock",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StockResponseDto.class))}
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -207,15 +207,15 @@ public class StockController {
     @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResponseEntity<StockDto> updateStock(
+    public ResponseEntity<StockResponseDto> updateStock(
             @Parameter(description = "id of stock to be updated") @PathVariable Long id,
-            @Parameter(description = "stock information to be updated") @Valid @RequestBody StockDto stockDto
+            @Parameter(description = "stock information to be updated") @Valid @RequestBody StockRequestDto stockRequestDto
     ) {
-        Stock updateStockRequest = stockMapper.toModal(stockDto);
+        Stock updateStockRequest = stockMapper.toEntity(stockRequestDto);
         Stock updatedStock = stockService.updateStock(id, updateStockRequest);
-        StockDto stockResponse = stockMapper.toDto(updatedStock);
+        StockResponseDto stockResponseDto = stockMapper.toModel(updatedStock);
 
-        return ResponseEntity.ok(stockResponse);
+        return ResponseEntity.ok(stockResponseDto);
     }
 
     /**
@@ -228,8 +228,7 @@ public class StockController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
-                    description = "Deleted Stock",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Stock.class))}
+                    description = "Deleted Stock"
             ),
             @ApiResponse(
                     responseCode = "404",
