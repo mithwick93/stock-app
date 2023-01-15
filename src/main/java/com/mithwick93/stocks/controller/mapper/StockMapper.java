@@ -19,7 +19,13 @@ public class StockMapper {
      * @return {@link StockDto}
      */
     public StockDto toDto(Stock stock) {
-        return new StockDto(stock.getId(), stock.getName(), stock.getCurrentPrice(), stock.getLastUpdate());
+        return new StockDto(
+                stock.getId(),
+                stock.getName(),
+                stock.getCurrentPrice(),
+                stock.getCreatedAt(),
+                stock.getLastUpdate()
+        );
     }
 
     /**
@@ -29,6 +35,12 @@ public class StockMapper {
      * @return {@link Stock}
      */
     public Stock toModal(StockDto stockDto) {
-        return new Stock(stockDto.getId(), stockDto.getName(), stockDto.getCurrentPrice(), stockDto.getLastUpdate());
+        return new Stock(
+                stockDto.getId(),
+                stockDto.getName(),
+                stockDto.getCurrentPrice(),
+                stockDto.getCreatedAt(),
+                stockDto.getLastUpdate()
+        );
     }
 }

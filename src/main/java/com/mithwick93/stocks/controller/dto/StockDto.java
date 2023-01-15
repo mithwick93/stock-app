@@ -40,6 +40,10 @@ public class StockDto {
     private BigDecimal currentPrice;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Null(message = "Stock created at not allowed in request")
+    private Date createdAt;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Null(message = "Stock last update not allowed in request")
     private Date lastUpdate;
 

@@ -43,7 +43,6 @@ public class StockService {
      * @throws StockNotFoundException when there is no stock with such id.
      */
     public Stock findStockById(long id) {
-        //TODO: revisit
         return stockRepository
                 .findById(id)
                 .orElseThrow(
@@ -69,7 +68,6 @@ public class StockService {
      * @return updated {@link Stock}.
      */
     public Stock updateStock(long id, Stock stock) {
-        //TODO: revisit, create if not found
         Stock existingStock = findStockById(id);
 
         existingStock.setName(stock.getName());
