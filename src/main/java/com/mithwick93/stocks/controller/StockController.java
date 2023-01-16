@@ -47,22 +47,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/api/v1/stocks")
 public class StockController {
-    private StockService stockService;
-    private StockMapper stockMapper;
-    private PagedResourcesAssembler<Stock> stockPagedResourcesAssembler;
+    private final StockService stockService;
+    private final StockMapper stockMapper;
+    private final PagedResourcesAssembler<Stock> stockPagedResourcesAssembler;
 
     @Autowired
-    public void setStockService(StockService stockService) {
+    public StockController(StockService stockService, StockMapper stockMapper, PagedResourcesAssembler<Stock> stockPagedResourcesAssembler) {
         this.stockService = stockService;
-    }
-
-    @Autowired
-    public void setStockMapper(StockMapper stockMapper) {
         this.stockMapper = stockMapper;
-    }
-
-    @Autowired
-    public void setStockPagedResourcesAssembler(PagedResourcesAssembler<Stock> stockPagedResourcesAssembler) {
         this.stockPagedResourcesAssembler = stockPagedResourcesAssembler;
     }
 
