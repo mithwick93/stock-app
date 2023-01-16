@@ -17,7 +17,7 @@ $ cd stocks-api
 $ mvn spring-boot:run
 ```
 
-## REST API spec
+## REST API Spec
 
 ```
 GET    /api/stocks       - Get a list of stocks.
