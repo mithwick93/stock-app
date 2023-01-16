@@ -29,14 +29,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     /**
      * Handle {@link StockNotFoundException}.
      *
-     * @param ex      exception to handle.
-     * @param request web request.
+     * @param ex      Exception to handle.
+     * @param request Web request.
      * @return RFC-7807 {@link ProblemDetail} wrapped in {@link ResponseEntity} with HTTP status 404.
      */
     @ExceptionHandler(value = StockNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND, code = HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ResponseEntity<ProblemDetail> handleStockNotFoundException(StockNotFoundException ex, WebRequest request) {
+    public ResponseEntity<ProblemDetail> handleStockNotFound(StockNotFoundException ex, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("Not found");
         problemDetail.setInstance(URI.create(((ServletWebRequest) request).getRequest().getRequestURI()));
@@ -47,14 +47,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     /**
      * Handle {@link IllegalArgumentException}.
      *
-     * @param ex      exception to handle.
-     * @param request web request.
+     * @param ex      Exception to handle.
+     * @param request Web request.
      * @return RFC-7807 {@link ProblemDetail} wrapped in {@link ResponseEntity} with HTTP status 400.
      */
     @ExceptionHandler(value = IllegalArgumentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, code = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+    public ResponseEntity<ProblemDetail> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problemDetail.setTitle("Invalid request content.");
         problemDetail.setInstance(URI.create(((ServletWebRequest) request).getRequest().getRequestURI()));
@@ -65,8 +65,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     /**
      * Handle invalid requests thrown with {@link MethodArgumentNotValidException }.
      *
-     * @param ex      exception to handle.
-     * @param request web request.
+     * @param ex      Exception to handle.
+     * @param request Web request.
      * @return RFC-7807 {@link ProblemDetail} wrapped in {@link ResponseEntity} with HTTP status 400.
      */
     @Override

@@ -26,7 +26,7 @@ public class StockService {
     /**
      * Returns list of all {@link Stock}s.
      *
-     * @return list of all {@link Stock}s.
+     * @return List of all {@link Stock}s.
      */
     public Page<Stock> findAllStocks(int page, int size) {
         //TODO: Revisit paging and return, add sorting by name
@@ -38,9 +38,9 @@ public class StockService {
     /**
      * Returns {@link Stock} by its id.
      *
-     * @param id id of stock to lookup.
+     * @param id Id of stock to lookup.
      * @return {@link Stock} by its id.
-     * @throws StockNotFoundException when there is no stock with such id.
+     * @throws StockNotFoundException When there is no stock with such id.
      */
     public Stock findStockById(long id) {
         return stockRepository
@@ -54,7 +54,7 @@ public class StockService {
      * Create new stock.
      *
      * @param stock {@link Stock} new stock to add.
-     * @return created {@link Stock}.
+     * @return Created {@link Stock}.
      */
     public Stock createStock(Stock stock) {
         return stockRepository.save(stock);
@@ -63,9 +63,9 @@ public class StockService {
     /**
      * Update {@link Stock} by its id based on the request received.
      *
-     * @param id    id of stock to delete.
-     * @param stock new {@link Stock} information.
-     * @return updated {@link Stock}.
+     * @param id    Id of stock to delete.
+     * @param stock New {@link Stock} information.
+     * @return Updated {@link Stock}.
      */
     public Stock updateStock(long id, Stock stock) {
         Stock existingStock = findStockById(id);
@@ -79,7 +79,7 @@ public class StockService {
     /**
      * Delete {@link Stock} by its id.
      *
-     * @param id id of stock to delete.
+     * @param id Id of stock to delete.
      */
     public void deleteStock(long id) {
         Stock existingStock = findStockById(id);

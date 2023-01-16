@@ -67,22 +67,22 @@ public class StockController {
     }
 
     /**
-     * Returns list of all {@link Stock}s.
+     * Returns list of all {@link StockResponseDto}s.
      *
-     * @param page page number. Default is 0.
-     * @param size size per page. Default is 10.
-     * @return list of all {@link Stock}s.
+     * @param page Page number. Default is 0.
+     * @param size Size per page. Default is 10.
+     * @return List of all {@link StockResponseDto}s.
      */
     @Operation(summary = "Get all stocks")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "Found the Stocks",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PagedModel.class))}// TODO: type of object
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PagedModel.class))}
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad stock data",
+                    description = "Bad data",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))}
             ),
             @ApiResponse(
@@ -96,7 +96,7 @@ public class StockController {
     @ResponseBody
     public ResponseEntity<PagedModel<StockResponseDto>> getStocks(
             @Parameter(description = "0-index page number. Default is 0") @RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER, required = false) int page,
-            @Parameter(description = "size of a page. Default is 10") @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) int size
+            @Parameter(description = "Size of a page. Default is 10") @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) int size
     ) {
         Page<Stock> stocksPages = stockService.findAllStocks(page, size);
         PagedModel<StockResponseDto> stockResponseDtos = stockPagedResourcesAssembler.toModel(stocksPages, stockMapper);
@@ -105,11 +105,11 @@ public class StockController {
     }
 
     /**
-     * Returns {@link Stock} by its id.
+     * Returns {@link StockResponseDto} by its id.
      *
-     * @param id id of stock to lookup.
-     * @return {@link Stock} by its id.
-     * @throws StockNotFoundException when there is no stock with such id.
+     * @param id Id of stock to lookup.
+     * @return {@link StockResponseDto} by its id.
+     * @throws StockNotFoundException When there is no stock with such id.
      */
     @Operation(summary = "Get a stock by its id")
     @ApiResponses(value = {
@@ -133,7 +133,7 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<StockResponseDto> getStockById(
-            @Parameter(description = "id of stock to be searched") @PathVariable Long id
+            @Parameter(description = "Id of stock to be searched") @PathVariable Long id
     ) {
         Stock stock = stockService.findStockById(id);
         StockResponseDto stockResponseDto = stockMapper.toModel(stock);
@@ -145,7 +145,7 @@ public class StockController {
      * Create new stock by request.
      *
      * @param stockRequestDto {@link StockRequestDto} of new stock to add.
-     * @return newly created {@link Stock}.
+     * @return Newly created {@link Stock}.
      */
     @Operation(summary = "Create stock")
     @ApiResponses(value = {
@@ -169,7 +169,7 @@ public class StockController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResponseEntity<StockResponseDto> createStock(
-            @Parameter(description = "new stock request") @Valid @RequestBody StockRequestDto stockRequestDto
+            @Parameter(description = "New stock request") @Valid @RequestBody StockRequestDto stockRequestDto
     ) {
         Stock newStockRequest = stockMapper.toEntity(stockRequestDto);
         Stock createdStock = stockService.createStock(newStockRequest);
@@ -183,9 +183,9 @@ public class StockController {
     /**
      * Updates given stock.
      *
-     * @param id              id of stock to update.
+     * @param id              Id of stock to update.
      * @param stockRequestDto {@link StockRequestDto} of stock to update from.
-     * @return updated {@link Stock}.
+     * @return Updated {@link Stock}.
      */
     @Operation(summary = "Update stock")
     @ApiResponses(value = {
@@ -214,8 +214,8 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<StockResponseDto> updateStock(
-            @Parameter(description = "id of stock to be updated") @PathVariable Long id,
-            @Parameter(description = "stock information to be updated") @Valid @RequestBody StockRequestDto stockRequestDto
+            @Parameter(description = "Id of stock to be updated") @PathVariable Long id,
+            @Parameter(description = "Stock information to be updated") @Valid @RequestBody StockRequestDto stockRequestDto
     ) {
         Stock updateStockRequest = stockMapper.toEntity(stockRequestDto);
         Stock updatedStock = stockService.updateStock(id, updateStockRequest);
@@ -227,8 +227,8 @@ public class StockController {
     /**
      * Delete a stock by id.
      *
-     * @param id id of stock to delete.
-     * @return Void
+     * @param id Id of stock to delete.
+     * @return HTTP 204 response code with no body.
      */
     @Operation(summary = "Delete stock")
     @ApiResponses(value = {
@@ -250,7 +250,7 @@ public class StockController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteStock(
-            @Parameter(description = "id of stock to be deleted") @PathVariable Long id
+            @Parameter(description = "Id of stock to be deleted") @PathVariable Long id
     ) {
         stockService.deleteStock(id);
 

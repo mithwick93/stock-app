@@ -2,6 +2,41 @@
 
 Java Spring Boot backend REST application that implements REST endpoints to handle a simple CRUD operations of Stocks
 
+## How to run the application
+
+### Installation
+
+* This app requires [Maven](https://maven.apache.org/download.cgi) and Java 17 to build, run and deploy.
+* Clone this app, install the dependencies and start the server.
+* The application will be running by default at http://localhost:8080
+* Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
+
+```
+$ git clone https://github.com/mithwick93/stocks-api.git
+$ cd stocks-api
+$ mvn spring-boot:run
+```
+
+## REST API spec
+
+```
+GET    /api/stocks       - Get a list of stocks.
+GET    /api/stocks/{id}  - Get one stock from using stock id.
+POST   /api/stocks       - Create a stock.
+PUT    /api/stocks/{id}  - Update a single stock by id.
+DELETE /api/stocks/{id}  - Delete a single stock by id.
+```
+
+## Libraries
+
+* Spring Boot Starter Web
+* Spring Boot Starter Data JPA
+* Spring Boot Starter Hateoas
+* Spring Boot Starter Validation
+* Spring Boot Starter Actuator
+* Flyway Core
+* Project Lombok
+
 ## License Information
 
 <pre>

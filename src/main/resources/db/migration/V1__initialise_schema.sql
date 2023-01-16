@@ -1,3 +1,4 @@
+-- DDL for the stocks table
 CREATE TABLE stocks
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,

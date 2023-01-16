@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Stock entity which contains info about stock, its name and price.
+ * Stock entity which contains information about stock name and price.
  *
  * @author mithwick93
  */
