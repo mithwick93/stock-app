@@ -34,6 +34,7 @@ DELETE /api/stocks/{id}  - Delete a single stock by id.
 * Spring Boot Starter Hateoas
 * Spring Boot Starter Validation
 * Spring Boot Starter Actuator
+* Spring Boot Starter AOP
 * Flyway Core
 * Project Lombok
 
