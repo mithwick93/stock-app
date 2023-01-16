@@ -226,7 +226,8 @@ public class StockController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
-                    description = "Deleted Stock"
+                    description = "Deleted Stock",
+                    content = @Content
             ),
             @ApiResponse(
                     responseCode = "404",

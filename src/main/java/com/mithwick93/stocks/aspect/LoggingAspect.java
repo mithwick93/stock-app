@@ -25,12 +25,12 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
+    @Pointcut("within(com.mithwick93.stocks..*)" + " && within(@org.springframework.web.bind.annotation.RestController *)")
     public void controllerPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
 
-    @Pointcut("within(@org.springframework.web.bind.annotation.ControllerAdvice *)")
+    @Pointcut("within(com.mithwick93.stocks..*)" + " && within(@org.springframework.web.bind.annotation.ControllerAdvice *)")
     public void controllerAdvisorPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
