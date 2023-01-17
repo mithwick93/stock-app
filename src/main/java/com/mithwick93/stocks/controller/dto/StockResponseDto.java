@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Stock DTO used to send stock response to clients.
@@ -24,6 +23,6 @@ public class StockResponseDto extends RepresentationModel<StockResponseDto> {
     private Long id;
     private String name;
     private BigDecimal currentPrice;
-    private Date createdAt;
-    private Date lastUpdate;
+    private long createdAt;
+    private long lastUpdate;
 }

@@ -16,7 +16,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * Stock entity which contains information about stock name and price.
@@ -44,10 +44,10 @@ public class Stock {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private Date createdAt;
+    private Timestamp createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @UpdateTimestamp
-    private Date lastUpdate;
+    private Timestamp lastUpdate;
 }

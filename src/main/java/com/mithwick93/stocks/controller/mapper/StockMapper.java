@@ -34,8 +34,8 @@ public class StockMapper extends RepresentationModelAssemblerSupport<Stock, Stoc
                 stock.getId(),
                 stock.getName(),
                 stock.getCurrentPrice(),
-                stock.getCreatedAt(),
-                stock.getLastUpdate()
+                stock.getCreatedAt().getTime(),
+                stock.getLastUpdate().getTime()
         );
 
         stockDto.add(linkTo(methodOn(StockController.class).getStockById(stock.getId())).withSelfRel());
