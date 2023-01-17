@@ -12,9 +12,34 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 * Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
 
 ```
-$ git clone https://github.com/mithwick93/stocks-api.git
-$ cd stocks-api
-$ mvn spring-boot:run
+git clone https://github.com/mithwick93/stocks-api.git
+cd stocks-api
+```
+
+#### Run with docker
+
+1. Build application
+
+```
+./mvnw clean install -DskipTests
+```
+
+2. Build docker image
+
+```
+docker build -t mithwick93/stockapi .
+```
+
+3. Run
+
+```
+docker run -p 8080:8080 mithwick93/stockapi
+```
+
+#### Run without Docker
+
+```
+mvn spring-boot:run
 ```
 
 ## REST API Spec
