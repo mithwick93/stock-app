@@ -39,7 +39,7 @@ docker run -p 8080:8080 mithwick93/stockapi
 #### Run without Docker
 
 ```
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.arguments="--db-password=password"
 ```
 
 ## REST API Spec
