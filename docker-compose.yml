@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+  db:
+    image: "postgres:latest"
+    container_name: postgres-db
+    networks:
+      - stocks-app-network
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: stock-db
+  app:
+    container_name: stock-api
+    build: .
+    networks:
+      - stocks-app-network
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DB_USERNAME: postgres
+      DB_PASSWORD: "${DB_PASSWORD}"
+      DB_URL: jdbc:postgresql://db:5432/stock-db
+
+volumes:
+  postgres-data:
+
+networks:
+  stocks-app-network:

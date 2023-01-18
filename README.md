@@ -6,41 +6,33 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 
 ### Installation
 
-* This app requires [Maven](https://maven.apache.org/download.cgi) and Java 17 to build, run and deploy.
-* Clone this app, install the dependencies and start the server.
-* The application will be running by default at http://localhost:8080
-* Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
-
-```
-git clone https://github.com/mithwick93/stocks-api.git
-cd stocks-api
-```
+* This app requires Git, Java 17, Maven and Docker to build, run and deploy.
 
 #### Run with docker
 
-1. Build application
+1. Clone source files
+    ```
+    git clone https://github.com/mithwick93/stocks-api.git
+    cd stocks-api
+    ```
 
-```
-./mvnw clean install -DskipTests
-```
-
-2. Build docker image
-
-```
-docker build -t mithwick93/stockapi .
-```
+2. Build application
+    ```
+    ./mvnw clean install -DskipTests
+    ```
 
 3. Run
-
-```
-docker run -p 8080:8080 mithwick93/stockapi
-```
-
-#### Run without Docker
-
-```
-mvn spring-boot:run -Dspring-boot.run.arguments="--db-password=password"
-```
+    1. MAC / LINUX
+        ```
+        DB_PASSWORD=password docker-compose up --build
+        ```
+    2. WINDOWS (Powershell)
+       ```
+       $env:DB_PASSWORD="password"
+       docker-compose up --build
+       ```
+4. The application will be running by default at http://localhost:8080
+5. Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
 
 ## REST API Spec
 
@@ -50,6 +42,8 @@ GET    /api/stocks/{id}  - Get one stock from using stock id.
 POST   /api/stocks       - Create a stock.
 PUT    /api/stocks/{id}  - Update a single stock by id.
 DELETE /api/stocks/{id}  - Delete a single stock by id.
+
+GET    /actuator/health  - Server healthcheck endpoint.
 ```
 
 ## Libraries
@@ -60,8 +54,10 @@ DELETE /api/stocks/{id}  - Delete a single stock by id.
 * Spring Boot Starter Validation
 * Spring Boot Starter Actuator
 * Spring Boot Starter AOP
+* Postgresql
 * Flyway Core
 * Project Lombok
+* Open API
 
 ## License Information
 
