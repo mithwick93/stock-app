@@ -1,5 +1,6 @@
 package com.mithwick93.stocks.aspect;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mithwick93.stocks.util.JsonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class LoggingAspect {
      * @param joinPoint Join point for advice
      */
     @Before("controllerPointcut()")
-    public void beforeEndpoint(JoinPoint joinPoint) {
+    public void beforeEndpoint(JoinPoint joinPoint) throws JsonProcessingException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         log.info(
@@ -59,7 +60,7 @@ public class LoggingAspect {
      * @param joinPoint Join point for advice
      */
     @AfterReturning(pointcut = "controllerPointcut()", returning = "returnValue")
-    public void afterEndpoint(JoinPoint joinPoint, Object returnValue) {
+    public void afterEndpoint(JoinPoint joinPoint, Object returnValue) throws JsonProcessingException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         log.info(
@@ -96,7 +97,7 @@ public class LoggingAspect {
      * @param joinPoint Join point for advice
      */
     @AfterReturning(pointcut = "controllerAdvisorPointcut()", returning = "returnValue")
-    public void afterExceptionHandle(JoinPoint joinPoint, Object returnValue) {
+    public void afterExceptionHandle(JoinPoint joinPoint, Object returnValue) throws JsonProcessingException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         log.error(
