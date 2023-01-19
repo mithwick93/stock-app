@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JsonUtilTest {
     @Test
-    public void getJsonString_whenCorrectObjectPassed_ThenReturnString() throws JsonProcessingException {
+    public void getJsonString_whenCorrectObjectPassed_thenReturnString() throws JsonProcessingException {
         Object inputObject = new StockResponseDto();
         String expectedResult = "{\"id\":null,\"name\":null,\"currentPrice\":null,\"createdAt\":0,\"lastUpdate\":0,\"links\":[]}";
 
