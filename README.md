@@ -34,6 +34,12 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 4. The application will be running by default at http://localhost:8080
 5. Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
 
+#### Run without Docker
+
+```
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
 ## REST API Spec
 
 ```
