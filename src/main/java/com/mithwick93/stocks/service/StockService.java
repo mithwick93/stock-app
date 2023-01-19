@@ -29,7 +29,6 @@ public class StockService {
      * @return List of all {@link Stock}s.
      */
     public Page<Stock> findAllStocks(int page, int size) {
-        //TODO: Revisit paging and return, add sorting by name
         Pageable pageable = PageRequest.of(page, size);
 
         return stockRepository.findAll(pageable);
