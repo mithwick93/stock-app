@@ -1,49 +1,56 @@
 package com.mithwick93.stocks.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mithwick93.stocks.controller.dto.StockRequestDto;
 import com.mithwick93.stocks.controller.dto.StockResponseDto;
 import com.mithwick93.stocks.controller.mapper.StockMapper;
+import com.mithwick93.stocks.exception.StockNotFoundException;
 import com.mithwick93.stocks.modal.Stock;
 import com.mithwick93.stocks.service.StockService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mithwick93.stocks.core.TestUtils.creatRequestStock;
 import static com.mithwick93.stocks.core.TestUtils.creatStock;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(controllers = StockController.class)
 class StockControllerTest {
-    @InjectMocks
-    StockController stockController;
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockBean
     private StockService stockService;
 
-    @Mock
+    @MockBean
     private StockMapper stockMapper;
 
-    @Mock
+    @MockBean
     private PagedResourcesAssembler<Stock> stockPagedResourcesAssembler;
 
     @Test
-    public void getStocks_whenCorrectParametersPassed_thenReturnResponseEntity() {
-        int page = 0;
-        int size = 10;
+    public void getStocks_whenCorrectParametersPassed_thenReturnResponseEntity() throws Exception {
 
         List<Stock> stocks = new ArrayList<>();
         Stock stock = creatStock();
@@ -61,20 +68,27 @@ class StockControllerTest {
         stockDtos.add(stockDto);
         PagedModel<StockResponseDto> stockResponseDtos = PagedModel.of(stockDtos, new PagedModel.PageMetadata(1, 0, 1, 1));
 
-        Mockito.when(stockService.findAllStocks(page, size)).thenReturn(stocksPage);
+        Mockito.when(stockService.findAllStocks(Mockito.anyInt(), Mockito.anyInt())).thenReturn(stocksPage);
         Mockito.when(stockPagedResourcesAssembler.toModel(stocksPage, stockMapper)).thenReturn(stockResponseDtos);
 
-        ResponseEntity<PagedModel<StockResponseDto>> response = stockController.getStocks(page, size);
+        mockMvc.perform(get("/api/v1/stocks"))
+                .andExpect(status().isOk());
 
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertEquals(1, response.getBody().getContent().size());
-
-        Mockito.verify(stockService, times(1)).findAllStocks(page, size);
-        Mockito.verify(stockPagedResourcesAssembler, times(1)).toModel(stocksPage, stockMapper);
+        Mockito.verify(stockService, times(1)).findAllStocks(Mockito.anyInt(), Mockito.anyInt());
     }
 
     @Test
-    public void getStockById_whenCorrectParametersPassed_thenReturnResponseEntity() {
+    public void getStocks_whenIncorrectParametersPassed_thenReturnResponseEntity() throws Exception {
+        int page = 0;
+        int size = -10;
+
+        mockMvc.perform(get("/api/v1/stocks?page={page}&size={size}", page, size))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void getStockById_whenCorrectParametersPassed_thenReturnResponseEntity() throws Exception {
         long id = 1;
 
         Stock stock = creatStock();
@@ -89,17 +103,26 @@ class StockControllerTest {
         Mockito.when(stockService.findStockById(id)).thenReturn(stock);
         Mockito.when(stockMapper.toModel(stock)).thenReturn(stockDto);
 
-        ResponseEntity<StockResponseDto> response = stockController.getStockById(id);
-
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertEquals(stockDto, response.getBody());
+        mockMvc.perform(get("/api/v1/stocks/{id}", id))
+                .andExpect(status().isOk());
 
         Mockito.verify(stockService, times(1)).findStockById(id);
-        Mockito.verify(stockMapper, times(1)).toModel(stock);
     }
 
     @Test
-    public void createStock_whenCorrectParametersPassed_thenReturnResponseEntity() {
+    public void getStockById_whenStockNotFound_thenReturnNotFound() throws Exception {
+        long id = 1;
+
+        Mockito.when(stockService.findStockById(id)).thenThrow(new StockNotFoundException(id));
+
+        mockMvc.perform(get("/api/v1/stocks/{id}", id))
+                .andExpect(status().isNotFound());
+
+        Mockito.verify(stockService, times(1)).findStockById(id);
+    }
+
+    @Test
+    public void createStock_whenCorrectParametersPassed_thenReturnResponseEntity() throws Exception {
         Stock stock = creatRequestStock();
         StockRequestDto stockRequestDto = new StockRequestDto(stock.getName(), stock.getCurrentPrice());
 
@@ -119,18 +142,30 @@ class StockControllerTest {
         Mockito.when(stockService.createStock(stock)).thenReturn(savedStock);
         Mockito.when(stockMapper.toModel(savedStock)).thenReturn(stockDto);
 
-        ResponseEntity<StockResponseDto> response = stockController.createStock(stockRequestDto);
+        mockMvc.perform(post("/api/v1/stocks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(stockRequestDto))
+                )
+                .andExpect(status().isCreated());
 
-        assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
-        assertEquals(stockDto, response.getBody());
-
-        Mockito.verify(stockMapper, times(1)).toEntity(stockRequestDto);
         Mockito.verify(stockService, times(1)).createStock(stock);
-        Mockito.verify(stockMapper, times(1)).toModel(savedStock);
     }
 
     @Test
-    public void updateStock_whenCorrectParametersPassed_thenReturnResponseEntity() {
+    public void createStock_whenIncorrectParametersPassed_thenReturnResponseEntity() throws Exception {
+        Stock stock = creatRequestStock();
+        stock.setName(null);
+        StockRequestDto stockRequestDto = new StockRequestDto(stock.getName(), stock.getCurrentPrice());
+
+        mockMvc.perform(post("/api/v1/stocks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(stockRequestDto))
+                )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateStock_whenCorrectParametersPassed_thenReturnResponseEntity() throws Exception {
         long id = 2;
         Stock stock = creatRequestStock();
         StockRequestDto stockRequestDto = new StockRequestDto(stock.getName(), stock.getCurrentPrice());
@@ -151,23 +186,23 @@ class StockControllerTest {
         Mockito.when(stockService.updateStock(id, stock)).thenReturn(updatedStock);
         Mockito.when(stockMapper.toModel(updatedStock)).thenReturn(stockDto);
 
-        ResponseEntity<StockResponseDto> response = stockController.updateStock(id, stockRequestDto);
+        mockMvc.perform(put("/api/v1/stocks/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(stockRequestDto))
+                )
+                .andExpect(status().isOk());
 
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        assertEquals(stockDto, response.getBody());
-
-        Mockito.verify(stockMapper, times(1)).toEntity(stockRequestDto);
         Mockito.verify(stockService, times(1)).updateStock(id, stock);
-        Mockito.verify(stockMapper, times(1)).toModel(updatedStock);
     }
 
     @Test
-    public void deleteStock_whenCorrectParametersPassed_thenReturnResponseEntity() {
+    public void deleteStock_whenCorrectParametersPassed_thenReturnResponseEntity() throws Exception {
         long id = 3;
 
-        ResponseEntity<?> response = stockController.deleteStock(id);
+        mockMvc.perform(delete("/api/v1/stocks/{id}", id))
+                .andExpect(status().isNoContent());
 
-        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+        Mockito.verify(stockService, times(1)).deleteStock(id);
 
     }
 

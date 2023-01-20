@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -22,6 +23,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +48,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Tag(name = "Stocks", description = "CRUD operations")
 @RestController
 @RequestMapping(value = "/api/v1/stocks")
+@Validated
 public class StockController {
     private final StockService stockService;
     private final StockMapper stockMapper;
@@ -87,8 +90,8 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<PagedModel<StockResponseDto>> getStocks(
-            @Parameter(description = "0-index page number. Default is 0") @RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER, required = false) int page,
-            @Parameter(description = "Size of a page. Default is 10") @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) int size
+            @Parameter(description = "0-index page number. Default is 0") @RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER, required = false) @Min(0) int page,
+            @Parameter(description = "Size of a page. Default is 10") @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE, required = false) @Min(1) int size
     ) {
         Page<Stock> stocksPages = stockService.findAllStocks(page, size);
         PagedModel<StockResponseDto> stockResponseDtos = stockPagedResourcesAssembler.toModel(stocksPages, stockMapper);
@@ -125,7 +128,7 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<StockResponseDto> getStockById(
-            @Parameter(description = "Id of stock to be searched") @PathVariable Long id
+            @Parameter(description = "Id of stock to be searched") @PathVariable long id
     ) {
         Stock stock = stockService.findStockById(id);
         StockResponseDto stockResponseDto = stockMapper.toModel(stock);
@@ -206,7 +209,7 @@ public class StockController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ResponseEntity<StockResponseDto> updateStock(
-            @Parameter(description = "Id of stock to be updated") @PathVariable Long id,
+            @Parameter(description = "Id of stock to be updated") @PathVariable long id,
             @Parameter(description = "Stock information to be updated") @Valid @RequestBody StockRequestDto stockRequestDto
     ) {
         Stock updateStockRequest = stockMapper.toEntity(stockRequestDto);
@@ -243,7 +246,7 @@ public class StockController {
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deleteStock(
-            @Parameter(description = "Id of stock to be deleted") @PathVariable Long id
+            @Parameter(description = "Id of stock to be deleted") @PathVariable long id
     ) {
         stockService.deleteStock(id);
 

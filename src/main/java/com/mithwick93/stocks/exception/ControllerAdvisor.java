@@ -1,5 +1,6 @@
 package com.mithwick93.stocks.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
@@ -41,14 +43,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handle {@link IllegalArgumentException}.
+     * Handle Bad input.
      *
      * @param ex      Exception to handle.
      * @param request Web request.
      * @return RFC-7807 {@link ProblemDetail} wrapped in {@link ResponseEntity} with HTTP status 400.
      */
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<ProblemDetail> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+    @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ProblemDetail> handleConstraintViolation(Exception ex, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problemDetail.setTitle("Invalid request content.");
         problemDetail.setInstance(URI.create(((ServletWebRequest) request).getRequest().getRequestURI()));
