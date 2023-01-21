@@ -6,7 +6,7 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 
 ### Installation
 
-* This app requires Git, Java 17, Maven and Docker to build, run and deploy.
+* This app requires Git, Java 17, Maven and Docker to build, test and run.
 
 #### Run with docker
 
@@ -31,8 +31,6 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
        $env:DB_PASSWORD="password"
        docker-compose up --build
        ```
-4. The application will be running by default at http://localhost:8080
-5. Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
 
 #### Run without Docker
 
@@ -46,17 +44,19 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 mvn verify
 ```
 
-## REST API Spec
+## REST API
 
-```
-GET    /api/stocks       - Get a list of stocks.
-GET    /api/stocks/{id}  - Get one stock from using stock id.
-POST   /api/stocks       - Create a stock.
-PUT    /api/stocks/{id}  - Update a single stock by id.
-DELETE /api/stocks/{id}  - Delete a single stock by id.
+* Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
 
-GET    /actuator/health  - Server healthcheck endpoint.
-```
+    ```
+    GET    /api/stocks       - Get a list of stocks.
+    GET    /api/stocks/{id}  - Get one stock from using stock id.
+    POST   /api/stocks       - Create a stock.
+    PUT    /api/stocks/{id}  - Update a single stock by id.
+    DELETE /api/stocks/{id}  - Delete a single stock by id.
+    
+    GET    /actuator/health  - Server healthcheck endpoint.
+    ```
 
 ## License Information
 
