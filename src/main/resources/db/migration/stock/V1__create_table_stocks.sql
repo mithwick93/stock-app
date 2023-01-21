@@ -1,5 +1,5 @@
 -- DDL for the stocks table
-CREATE TABLE STOCK.STOCKS
+CREATE TABLE STOCKS
 (
     id            SERIAL PRIMARY KEY       NOT NULL,
     name          VARCHAR(255)             NOT NULL,
