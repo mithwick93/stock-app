@@ -2,10 +2,10 @@ package com.mithwick93.stocks.controller;
 
 import com.mithwick93.stocks.controller.dto.StockRequestDto;
 import com.mithwick93.stocks.controller.dto.StockResponseDto;
+import com.mithwick93.stocks.core.IntegrationTest;
 import com.mithwick93.stocks.modal.Stock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,7 @@ import static com.mithwick93.stocks.core.TestUtils.creatRequestStock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@SpringBootTest
-public class StockControllerIT {
+public class StockControllerIT extends IntegrationTest {
 
     @Autowired
     StockController stockController;

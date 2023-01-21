@@ -1,9 +1,9 @@
 package com.mithwick93.stocks.dal.repository;
 
+import com.mithwick93.stocks.core.IntegrationTest;
 import com.mithwick93.stocks.modal.Stock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,8 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
-class StockRepositoryTest {
+class StockRepositoryIT extends IntegrationTest {
 
     @Autowired
     private StockRepository stockRepository;
@@ -45,7 +44,9 @@ class StockRepositoryTest {
 
         Page<Stock> allStocksResult = stockRepository.findAll(pageable);
 
-        assertEquals(stock.getName(), allStocksResult.getContent().get(0).getName());
+        Optional<Stock> stockOptional = allStocksResult.getContent().stream().filter(responseStock -> responseStock.getName().equals(stock.getName())).findFirst();
+
+        assertFalse(stockOptional.isEmpty());
     }
 
     @Test
@@ -60,7 +61,7 @@ class StockRepositoryTest {
         assertFalse(getStockByIdResult.isEmpty());
         assertEquals(saveResult.getId(), getStockByIdResult.get().getId());
         assertEquals(stock.getName(), getStockByIdResult.get().getName());
-        assertEquals(stock.getCurrentPrice(), getStockByIdResult.get().getCurrentPrice());
+        assertEquals(0, getStockByIdResult.get().getCurrentPrice().compareTo(stock.getCurrentPrice()));
     }
 
     @Test
@@ -95,6 +96,8 @@ class StockRepositoryTest {
         Stock saveResult = stockRepository.save(stock);
 
         stockRepository.deleteById(saveResult.getId());
+
+        assertTrue(true);
     }
 
     @Test

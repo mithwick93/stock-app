@@ -1,10 +1,9 @@
 package com.mithwick93.stocks;
 
+import com.mithwick93.stocks.core.IntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class ApplicationIT {
+class ApplicationIT extends IntegrationTest {
 
     @Test
     void contextLoads() {
