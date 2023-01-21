@@ -203,7 +203,5 @@ class StockControllerTest {
                 .andExpect(status().isNoContent());
 
         Mockito.verify(stockService, times(1)).deleteStock(id);
-
     }
-
 }
