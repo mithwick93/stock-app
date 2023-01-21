@@ -40,6 +40,12 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
+### Run all tests
+```
+mvn verify
+
+```
+
 ## REST API Spec
 
 ```
