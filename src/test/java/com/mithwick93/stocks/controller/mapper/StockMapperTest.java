@@ -20,7 +20,7 @@ class StockMapperTest {
     }
 
     @Test
-    public void toModel_WhenStockPassed_thenReturnCorrectStockResponseDto() {
+    public void toModel_whenStockPassed_thenReturnCorrectStockResponseDto() {
         Stock inputStock = new Stock();
         inputStock.setId(1L);
         inputStock.setName("MSW");
@@ -41,7 +41,7 @@ class StockMapperTest {
     }
 
     @Test
-    public void toEntity_WhenStockRequestDtoPassed_thenReturnCorrectStock() {
+    public void toEntity_whenStockRequestDtoPassed_thenReturnCorrectStock() {
         StockRequestDto inputStockRequestDto = new StockRequestDto();
         inputStockRequestDto.setName("MSW");
         inputStockRequestDto.setCurrentPrice(BigDecimal.valueOf(1045.6));
