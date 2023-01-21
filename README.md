@@ -41,9 +41,9 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 ### Run all tests
+
 ```
 mvn verify
-
 ```
 
 ## REST API Spec
