@@ -20,7 +20,7 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 
 2. Build application
     ```
-    mvn clean install -DskipTests
+    ./mvnw clean install -DskipTests
     ```
 
 3. Run
@@ -53,7 +53,7 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 2. Run the application using maven pointing to local database.
     1. MAC / LINUX
        ```
-       dbUrl=jdbc:postgresql://localhost:5432/stock-db dbUsername=postgres dbPassword=password mvn spring-boot:run
+       dbUrl=jdbc:postgresql://localhost:5432/stock-db dbUsername=postgres dbPassword=password ./mvnw spring-boot:run
        ```
 
     2. WINDOWS (Powershell)
@@ -62,13 +62,13 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
        $env:dbUrl="jdbc:postgresql://localhost:5432/stock-db"
        $env:dbUsername="postgres"
        $env:dbPassword="password"
-       mvn spring-boot:run
+       ./mvnw spring-boot:run
        ```
 
 ### Run all tests
 
 ```
-mvn clean verify
+./mvnw clean verify
 ```
 
 ## REST API
