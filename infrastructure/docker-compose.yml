@@ -9,6 +9,7 @@ services:
       - stocks-app-network
   app:
     container_name: stock-api
+    image: mithwick93/stock-api
     build:
       context: ../
       dockerfile: ./infrastructure/Dockerfile

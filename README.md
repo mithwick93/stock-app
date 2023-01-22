@@ -1,6 +1,6 @@
 # Stock REST API
 
-Java Spring Boot backend REST application that implements REST endpoints to handle a simple CRUD operations of Stocks
+Java Spring Boot REST application that implements REST endpoints to handle simple CRUD operations of Stocks.
 
 ## How to run the application
 
@@ -8,9 +8,7 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 
 * This app requires Git, Java 17, Maven and Docker to build, test and run.
 
-#### Run API with docker compose
-
-* This is the recommended approach for consuming the API locally.
+#### Clone repo
 
 1. Clone source files
     ```
@@ -23,25 +21,30 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
     ./mvnw clean install -DskipTests
     ```
 
-3. Run
-    1. MAC / LINUX
-        ```
-        DB_PASSWORD=password docker-compose -f infrastructure/docker-compose.yml up --build
-        ```
-    2. WINDOWS (Powershell)
-       ```
-       $env:DB_PASSWORD="password"
-       docker-compose -f infrastructure/docker-compose.yml up --build
-       ```
+#### Run API with docker compose
+
+* This is the recommended approach for consuming the API locally.
+
+1. MAC / LINUX
+    ```
+    export DB_PASSWORD=password 
+    docker-compose -f infrastructure/docker-compose.yml up --build --force-recreate
+    ```
+2. WINDOWS (Powershell)
+   ```
+   $env:DB_PASSWORD="password"
+   docker-compose -f infrastructure/docker-compose.yml up --build --force-recreate
+   ```
 
 #### Run API without Docker
 
-* This is the recommended approach for developing the API locally.
+* This is the recommended approach for developing the API locally. Docker is still needed to host the database.
 
 1. Setup a postgres database locally.
     1. MAC / LINUX
         ```
-        DB_PASSWORD=password docker-compose -f infrastructure/common-services.yml up
+        export DB_PASSWORD=password 
+        docker-compose -f infrastructure/common-services.yml up
         ```
 
     2. WINDOWS (Powershell)
@@ -53,11 +56,13 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 2. Run the application using maven pointing to local database.
     1. MAC / LINUX
        ```
-       dbUrl=jdbc:postgresql://localhost:5432/stock-db dbUsername=postgres dbPassword=password ./mvnw spring-boot:run
+       export dbUrl=jdbc:postgresql://localhost:5432/stock-db 
+       export dbUsername=postgres 
+       export dbPassword=password 
+       ./mvnw spring-boot:run
        ```
 
     2. WINDOWS (Powershell)
-
        ```
        $env:dbUrl="jdbc:postgresql://localhost:5432/stock-db"
        $env:dbUsername="postgres"
@@ -66,6 +71,8 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
        ```
 
 ### Run all tests
+
+* Run all unit and integration tests.
 
 ```
 ./mvnw clean verify
@@ -96,7 +103,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
