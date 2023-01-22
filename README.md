@@ -78,6 +78,8 @@ Java Spring Boot REST application that implements REST endpoints to handle simpl
 ./mvnw clean verify
 ```
 
+* Test coverage report available at `target/site/jacoco/index.html`
+
 ## REST API
 
 * Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/

@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
@@ -66,6 +67,15 @@ public class StockControllerIT extends IntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(HttpStatus.OK.value()), getByIdResponse.getStatusCode());
         assertEquals(id, getByIdResponse.getBody().getId());
+    }
+
+    @Test
+    public void getStockById_whenCalledWithInValidId_thenReturnNotFoundResponseWithNoBody() {
+        long id = -1L;
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<ProblemDetail> getByIdResponse = restTemplate.exchange(createURLWithPort("/api/v1/stocks/" + id), HttpMethod.GET, entity, ProblemDetail.class);
+
+        assertEquals(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()), getByIdResponse.getStatusCode());
     }
 
     @Test

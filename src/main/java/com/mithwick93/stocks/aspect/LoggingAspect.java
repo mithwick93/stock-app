@@ -27,11 +27,13 @@ import java.util.Arrays;
 public class LoggingAspect {
 
     @Pointcut("within(com.mithwick93.stocks..*)" + " && within(@org.springframework.web.bind.annotation.RestController *)")
+    @lombok.Generated
     public void controllerPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
 
-    @Pointcut("within(com.mithwick93.stocks..*)" + " && within(@org.springframework.web.bind.annotation.ControllerAdvice *)")
+    @Pointcut("within(com.mithwick93.stocks..*)" + " && within(@org.springframework.web.bind.annotation.RestControllerAdvice *)")
+    @lombok.Generated
     public void controllerAdvisorPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
