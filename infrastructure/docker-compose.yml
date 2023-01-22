@@ -9,7 +9,9 @@ services:
       - stocks-app-network
   app:
     container_name: stock-api
-    build: .
+    build:
+      context: ../
+      dockerfile: ./infrastructure/Dockerfile
     networks:
       - stocks-app-network
     ports:

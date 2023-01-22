@@ -26,12 +26,12 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 3. Run
     1. MAC / LINUX
         ```
-        DB_PASSWORD=password docker-compose up --build
+        DB_PASSWORD=password docker-compose -f infrastructure/docker-compose.yml up --build
         ```
     2. WINDOWS (Powershell)
        ```
        $env:DB_PASSWORD="password"
-       docker-compose up --build
+       docker-compose -f infrastructure/docker-compose.yml up --build
        ```
 
 #### Run API without Docker
@@ -41,13 +41,13 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 1. Setup a postgres database locally.
     1. MAC / LINUX
         ```
-        DB_PASSWORD=password docker-compose -f common-services.yml up
+        DB_PASSWORD=password docker-compose -f infrastructure/common-services.yml up
         ```
 
     2. WINDOWS (Powershell)
        ```
         $env:DB_PASSWORD="password"
-        docker-compose -f common-services.yml up
+        docker-compose -f infrastructure/common-services.yml up
        ```
 
 2. Run the application using maven pointing to local database.
