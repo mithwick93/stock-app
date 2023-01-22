@@ -9,7 +9,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 /**
  * This spins up a database container for the tests.
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public class IntegrationTest {
     private static final PostgreSQLContainer<?> databaseContainer = new PostgreSQLContainer<>("postgres:latest");
