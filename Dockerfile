@@ -7,6 +7,6 @@ ARG JAR_FILE=target/*.jar
 
 COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java", "-jar", "-Ddb-url=${DB_URL}", "-Ddb-username=${DB_USERNAME}", "-Ddb-password=${DB_PASSWORD}", "app.jar"]
+ENTRYPOINT ["java", "-jar", "-DdbUrl=${DB_URL}", "-DdbUsername=${DB_USERNAME}", "-DdbPassword=${DB_PASSWORD}", "app.jar"]
 
 EXPOSE 8080

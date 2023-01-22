@@ -8,7 +8,9 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 
 * This app requires Git, Java 17, Maven and Docker to build, test and run.
 
-#### Run with docker
+#### Run API with docker compose
+
+* This is the recommended approach for consuming the API locally.
 
 1. Clone source files
     ```
@@ -18,7 +20,7 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 
 2. Build application
     ```
-    ./mvnw clean install -DskipTests
+    mvn clean install -DskipTests
     ```
 
 3. Run
@@ -32,16 +34,41 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
        docker-compose up --build
        ```
 
-#### Run without Docker
+#### Run API without Docker
 
-```
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
+* This is the recommended approach for developing the API locally.
+
+1. Setup a postgres database locally.
+    1. MAC / LINUX
+        ```
+        DB_PASSWORD=password docker-compose -f common-services.yml up
+        ```
+
+    2. WINDOWS (Powershell)
+       ```
+        $env:DB_PASSWORD="password"
+        docker-compose -f common-services.yml up
+       ```
+
+2. Run the application using maven pointing to local database.
+    1. MAC / LINUX
+       ```
+       dbUrl=jdbc:postgresql://localhost:5432/stock-db dbUsername=postgres dbPassword=password mvn spring-boot:run
+       ```
+
+    2. WINDOWS (Powershell)
+
+       ```
+       $env:dbUrl="jdbc:postgresql://localhost:5432/stock-db"
+       $env:dbUsername="postgres"
+       $env:dbPassword="password"
+       mvn spring-boot:run
+       ```
 
 ### Run all tests
 
 ```
-mvn verify
+mvn clean verify
 ```
 
 ## REST API
