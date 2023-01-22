@@ -76,11 +76,11 @@ Java Spring Boot backend REST application that implements REST endpoints to hand
 * Swagger UI is available at http://localhost:8080/swagger-ui/index.html#/
 
     ```
-    GET    /api/stocks       - Get a list of stocks.
-    GET    /api/stocks/{id}  - Get one stock from using stock id.
-    POST   /api/stocks       - Create a stock.
-    PUT    /api/stocks/{id}  - Update a single stock by id.
-    DELETE /api/stocks/{id}  - Delete a single stock by id.
+    GET    /api/v1/stocks       - Get a list of stocks.
+    GET    /api/v1/stocks/{id}  - Get one stock from using stock id.
+    POST   /api/v1/stocks       - Create a stock.
+    PUT    /api/v1/stocks/{id}  - Update a single stock by id.
+    DELETE /api/v1/stocks/{id}  - Delete a single stock by id.
     
     GET    /actuator/health  - Server healthcheck endpoint.
     ```
